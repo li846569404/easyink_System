@@ -67,6 +67,10 @@ public class SysLoginController {
     @ApiOperation("第三方SCRM系统获取token")
     @GetMapping("/lockToken")
     public AjaxResult<LoginResult> lockToken(@RequestParam("corpId") String corpId, @RequestParam("userId") String userId) {
+        if (StringUtils.isBlank(corpId)){
+            WeCorpAccount validWeCorpAccount = iWxCorpAccountService.findValidWeCorpAccount();
+            corpId = validWeCorpAccount.getCorpId();
+        }
         return AjaxResult.success(loginService.getLoginToken(corpId, userId));
     }
 

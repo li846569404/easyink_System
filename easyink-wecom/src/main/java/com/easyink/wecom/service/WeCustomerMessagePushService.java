@@ -96,4 +96,14 @@ public interface WeCustomerMessagePushService {
      */
     void sendToUser(@Validated WeCustomerMessageToUserDTO weCustomerMessageToUserDTO);
 
+
+    /**
+     * 三方调用发送消息给应用
+     * @param userId
+     * @param msg
+     * @param replaceMsg
+     * @param corpId
+     */
+     void sendAppMessageThree(String userId, String msg, String replaceMsg, String corpId);
+
 }

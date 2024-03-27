@@ -4,6 +4,7 @@ import com.easyink.common.annotation.Log;
 import com.easyink.common.constant.WeConstans;
 import com.easyink.common.core.controller.BaseController;
 import com.easyink.common.core.domain.AjaxResult;
+import com.easyink.common.core.domain.entity.WeCorpAccount;
 import com.easyink.common.core.domain.model.LoginUser;
 import com.easyink.common.core.domain.wecom.WeUser;
 import com.easyink.common.core.page.TableDataInfo;
@@ -20,6 +21,7 @@ import com.easyink.wecom.domain.dto.transfer.TransferResignedUserListDTO;
 import com.easyink.wecom.domain.vo.*;
 import com.easyink.wecom.domain.vo.transfer.TransferResignedUserVO;
 import com.easyink.wecom.login.util.LoginTokenService;
+import com.easyink.wecom.service.WeCorpAccountService;
 import com.easyink.wecom.service.WeDepartmentService;
 import com.easyink.wecom.service.WeResignedTransferRecordService;
 import com.easyink.wecom.service.WeUserService;
@@ -53,13 +55,15 @@ public class WeUserController extends BaseController {
     private final WeUserService weUserService;
     private final WeDepartmentService weDepartmentService;
     private final WeResignedTransferRecordService weResignedTransferRecordService;
+    private final WeCorpAccountService iWxCorpAccountService;
 
     @Autowired
     @Lazy
-    public WeUserController(WeUserService weUserService,WeDepartmentService weDepartmentService, WeResignedTransferRecordService weResignedTransferRecordService) {
+    public WeUserController(WeUserService weUserService,WeDepartmentService weDepartmentService, WeResignedTransferRecordService weResignedTransferRecordService,WeCorpAccountService iWxCorpAccountService) {
         this.weUserService = weUserService;
         this.weDepartmentService = weDepartmentService;
         this.weResignedTransferRecordService = weResignedTransferRecordService;
+        this.iWxCorpAccountService = iWxCorpAccountService;
     }
 
     /**
@@ -111,7 +115,21 @@ public class WeUserController extends BaseController {
         List<WeUserBriefInfoVO> list = weUserService.selectWeUserBriefInfo(weUser);
         return getDataTable(list);
     }
-
+    /**
+     * 查询员工简短信息列表 （无需校验功能权限和数据权限 ）
+     *
+     * @param weUser
+     * @return 所有员工 userId和name的集合
+     */
+    @GetMapping("/briefListNew")
+    @ApiOperation("获取员工id和名字列表（无权限）")
+    public TableDataInfo<WeUserBriefInfoVO> briefListNew(WeUser weUser) {
+        startPage();
+        WeCorpAccount validWeCorpAccount = iWxCorpAccountService.findValidWeCorpAccount();
+        weUser.setCorpId(validWeCorpAccount.getCorpId());
+        List<WeUserBriefInfoVO> list = weUserService.selectWeUserBriefInfo(weUser);
+        return getDataTable(list);
+    }
 
     /**
      * 获取通讯录相关客户详细信息

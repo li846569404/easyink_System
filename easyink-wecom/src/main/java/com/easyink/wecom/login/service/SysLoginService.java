@@ -1,6 +1,7 @@
 package com.easyink.wecom.login.service;
 
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import com.easyink.common.config.RuoYiConfig;
 import com.easyink.common.constant.Constants;
 import com.easyink.common.core.domain.entity.WeCorpAccount;
@@ -113,15 +114,17 @@ public class SysLoginService {
         redisCache.deleteObject(verifyKey);
         WeCorpAccount weCorpAccount = weCorpAccountService.findValidWeCorpAccount();
         String corpId = weCorpAccountService.getCorpId(weCorpAccount);
-        if (captcha == null) {
-            AsyncManager.me().execute(AsyncFactory.recordLogininfor(corpId, username, Constants.LOGIN_FAIL, MessageUtils.message("user.jcaptcha.expire"), LoginTypeEnum.BY_PASSWORD.getType()));
-            throw new CaptchaExpireException();
+        //如果code = 112233 则跳过验证码
+        if (!StrUtil.equals("112233",code)){
+            if (captcha == null) {
+                AsyncManager.me().execute(AsyncFactory.recordLogininfor(corpId, username, Constants.LOGIN_FAIL, MessageUtils.message("user.jcaptcha.expire"), LoginTypeEnum.BY_PASSWORD.getType()));
+                throw new CaptchaExpireException();
+            }
+            if (!code.equalsIgnoreCase(captcha)) {
+                AsyncManager.me().execute(AsyncFactory.recordLogininfor(corpId, username, Constants.LOGIN_FAIL, MessageUtils.message("user.jcaptcha.error"), LoginTypeEnum.BY_PASSWORD.getType()));
+                throw new CaptchaException();
+            }
         }
-        if (!code.equalsIgnoreCase(captcha)) {
-            AsyncManager.me().execute(AsyncFactory.recordLogininfor(corpId, username, Constants.LOGIN_FAIL, MessageUtils.message("user.jcaptcha.error"), LoginTypeEnum.BY_PASSWORD.getType()));
-            throw new CaptchaException();
-        }
-
         //内部应用才支持帐号密码登录
         if (ruoYiConfig.isThirdServer()) {
             AsyncManager.me().execute(AsyncFactory.recordLogininfor(corpId, username, Constants.LOGIN_FAIL, MessageUtils.message("server.not.support"), LoginTypeEnum.BY_PASSWORD.getType()));

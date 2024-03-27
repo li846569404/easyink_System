@@ -89,7 +89,6 @@ public class ThreadPoolConfig {
         ThreadPoolProperties.BaseThreadProperty prop = threadPoolProperties.getFormTask();
         return init(prop.getCorePoolSize(), prop.getMaxPoolSize(), prop.getQueueCapacity(), prop.getKeepAliveSeconds(),"batchTag");
     }
-
     /**
      * 同步编辑客户回调 线程池
      *

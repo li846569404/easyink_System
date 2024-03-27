@@ -463,6 +463,11 @@ public class WeCustomerMessagePushServiceImpl implements WeCustomerMessagePushSe
         }
     }
 
+    @Override
+    public void sendAppMessageThree(String userId, String msg, String replaceMsg, String corpId) {
+        sendAppMessage(userId, msg, replaceMsg, corpId);
+    }
+
     /**
      * 发送应用消息（文本）
      *
@@ -490,6 +495,8 @@ public class WeCustomerMessagePushServiceImpl implements WeCustomerMessagePushSe
         log.debug("发送员工提醒信息：toUser:{}", userId);
         messagePushClient.sendMessageToUser(pushDto, agentId, corpId);
     }
+
+
 
     private WeCustomerMessageTimeTask getTimeTask(Long messageId) {
         final WeCustomerMessageTimeTask timeTask = customerMessageTimeTaskMapper.getTimeTask(messageId);
