@@ -11,7 +11,7 @@ import lombok.Data;
  * @date: 2021-08-04 14:05
  */
 @Data
-public class WeResultDTO {
+public class    WeResultDTO {
     private Long id;
     private Integer errcode;
     private String errmsg;

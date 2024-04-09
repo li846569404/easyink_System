@@ -6,7 +6,7 @@ ruoyi:
   version: ${VERSION:TAG_VERSION}
   releaseNotes: ${RELEASE_NOTES:https://xsxda94vjq.feishu.cn/docs/doccnMJuJvbFpkRdLYq7a0Q7l5d}
   file:
-    startCosUpload: ${START_COS_UPLOAD:true}
+    startCosUpload: ${START_COS_UPLOAD:false}
 #腾讯云对象存储
     cos:
       # 访问API密钥，用于生成签名验证
@@ -145,8 +145,8 @@ ruoyi:
       - /url
       - /wecom/transferData/**
       - /actuator/**
-
-
+      - /wecom/user/briefListNew
+      - /open_api/**
 # 开发环境配置
 server:
   # 服务器的HTTP端口，默认为8090
@@ -184,9 +184,9 @@ spring:
         druid:
             # 主库数据源
             master:
-              url: jdbc:mysql://${MYSQL_SERVICE_HOST:wecommysql}:${MYSQL_SERVICE_PORT:3306}/${MYSQL_SERVICE_DB_NAME:wecomscrm}?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8&allowMultiQueries=true
-              username: ${MYSQL_SERVICE_USERNAME:}
-              password: ${MYSQL_SERVICE_PASSWORD:}
+              url: jdbc:mysql://${MYSQL_SERVICE_HOST:110.42.233.89}:${MYSQL_SERVICE_PORT:3306}/${MYSQL_SERVICE_DB_NAME:wecomscrm}?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8&allowMultiQueries=true
+              username: ${MYSQL_SERVICE_USERNAME:qianyi}
+              password: ${MYSQL_SERVICE_PASSWORD:GMSch6Mr6DJ5zcm2}
             # 从库数据源
             slave:
                 # 从数据源开关/默认关闭
@@ -255,14 +255,14 @@ spring:
   # redis 配置
   redis:
     # 地址
-    host: ${REDIS_SERVICE_HOST:wecomredis}
+    host: ${REDIS_SERVICE_HOST:110.42.233.89}
     # 端口，默认为6379
     port: ${REDIS_SERVICE_PORT:6379}
     # 密码
-    password: ${REDIS_SERVICE_PASSWORD:wecomscrm}
+    password: ${REDIS_SERVICE_PASSWORD:123456}
     # 连接超时时间
     timeout: ${REDIS_SERVICE_TIMEOUT:10s}
-    database: ${REDIS_SERVICE_DATABASE:10}
+    database: ${REDIS_SERVICE_DATABASE:15}
     lettuce:
       pool:
         # 连接池中的最小空闲连接

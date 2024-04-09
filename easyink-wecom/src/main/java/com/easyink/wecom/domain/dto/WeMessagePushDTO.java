@@ -1,9 +1,6 @@
 package com.easyink.wecom.domain.dto;
 
-import com.easyink.wecom.domain.dto.message.ImageMessageDTO;
-import com.easyink.wecom.domain.dto.message.LinkMessageDTO;
-import com.easyink.wecom.domain.dto.message.MiniprogramMessageDTO;
-import com.easyink.wecom.domain.dto.message.TextMessageDTO;
+import com.easyink.wecom.domain.dto.message.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -88,5 +85,10 @@ public class WeMessagePushDTO {
      * 小程序消息
      */
     private MiniprogramMessageDTO miniprogram;
+
+    /**
+     * 文本卡片消息
+     */
+    private TextCardMessageDTO textcard;
 
 }

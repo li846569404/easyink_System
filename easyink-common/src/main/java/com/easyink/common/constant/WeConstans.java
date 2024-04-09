@@ -179,7 +179,7 @@ public class WeConstans {
     /**
      * 企业微信接口返回成功code
      */
-    public static final Integer WE_SUCCESS_CODE = 0;
+    public static final Integer     WE_SUCCESS_CODE = 0;
 
     /**
      * 编辑标签不存在错误码

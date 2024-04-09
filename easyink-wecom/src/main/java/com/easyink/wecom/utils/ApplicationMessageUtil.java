@@ -6,6 +6,7 @@ import com.easyink.common.core.domain.entity.WeCorpAccount;
 import com.easyink.common.enums.MessageType;
 import com.easyink.wecom.client.WeMessagePushClient;
 import com.easyink.wecom.domain.dto.WeMessagePushDTO;
+import com.easyink.wecom.domain.dto.message.TextCardMessageDTO;
 import com.easyink.wecom.domain.dto.message.TextMessageDTO;
 import com.easyink.wecom.service.WeCorpAccountService;
 import lombok.extern.slf4j.Slf4j;
@@ -65,6 +66,35 @@ public class ApplicationMessageUtil {
         pushDto.setAgentid(Integer.valueOf(agentId));
         pushDto.setText(text);
         pushDto.setMsgtype(MessageType.TEXT.getMessageType());
+        // 请求消息推送接口，获取结果 [消息推送 - 发送应用消息]
+        log.info("发送应用消息：toUser:{},corpId:{}", userString, corpId);
+        messagePushClient.sendMessageToUser(pushDto, agentId, corpId);
+    }
+
+    /**
+     * 发送应用消息（文本卡片）
+     *
+     * @param userIds  员工id列表
+     * @param corpId   企业id
+     * @param msg      消息模板 例如 “员工姓名：{0},年龄：{1}”
+     * @param paramMsg 替换占位符{}消息
+     */
+    public void sendTxtCardAppMessage(@NotEmpty List<String> userIds, String corpId,String title,String url,String btntxt, String msg, String... paramMsg) {
+        WeMessagePushDTO pushDto = new WeMessagePushDTO();
+        WeCorpAccount validWeCorpAccount = corpAccountService.findValidWeCorpAccount(corpId);
+        String agentId = validWeCorpAccount.getAgentId();
+        // 文本卡片消息
+        TextCardMessageDTO textCardMessageDTO = new TextCardMessageDTO();
+        //设置发送者 发送给企业员工
+        String userString = getUserString(userIds);
+        pushDto.setTouser(userString);
+        textCardMessageDTO.setDescription(MessageFormat.format(msg, paramMsg));
+        textCardMessageDTO.setTitle(title);
+        textCardMessageDTO.setBtntxt(btntxt);
+        textCardMessageDTO.setUrl(url);
+        pushDto.setAgentid(Integer.valueOf(agentId));
+        pushDto.setTextcard(textCardMessageDTO);
+        pushDto.setMsgtype(MessageType.TEXTCARD.getMessageType());
         // 请求消息推送接口，获取结果 [消息推送 - 发送应用消息]
         log.info("发送应用消息：toUser:{},corpId:{}", userString, corpId);
         messagePushClient.sendMessageToUser(pushDto, agentId, corpId);

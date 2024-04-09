@@ -1,7 +1,17 @@
 package com.easyink.web.controller.openapi;
 
 
+import com.dtflys.forest.annotation.Body;
+import com.dtflys.forest.annotation.Get;
+import com.dtflys.forest.annotation.Header;
+import com.dtflys.forest.annotation.Query;
 import com.easyink.common.core.domain.entity.WeCorpAccount;
+import com.easyink.wecom.client.We3rdUserClient;
+import com.easyink.wecom.client.WeAccessTokenClient;
+import com.easyink.wecom.client.WeUserClient;
+import com.easyink.wecom.domain.dto.WeAccessUserInfo3rdDTO;
+import com.easyink.wecom.domain.dto.WeLoginUserInfoDTO;
+import com.easyink.wecom.domain.dto.WeUserInfoDTO;
 import com.easyink.wecom.service.WeCorpAccountService;
 import com.easyink.wecom.utils.ApplicationMessageUtil;
 import io.swagger.annotations.Api;
@@ -32,6 +42,9 @@ public class OpenApiController {
 
     private final WeCorpAccountService ixCorpAccountService;
 
+    private final WeAccessTokenClient weAccessTokenClient;
+
+    private final WeUserClient weUserClient;
     /**
      * 发送应用消息（文本）
      *
@@ -41,11 +54,20 @@ public class OpenApiController {
      * @param paramMsg 替换占位符{}消息
      */
     @GetMapping("/send/app")
-    public void sendAppMessage(String userIds, String corpId, String msg, String... paramMsg) {
+    public void sendAppMessage(String userIds, String corpId,String title,String url,String btntxt, String msg, String... paramMsg) {
         if (StringUtils.isBlank(corpId)){
             WeCorpAccount validWeCorpAccount = ixCorpAccountService.findValidWeCorpAccount();
             corpId = validWeCorpAccount.getCorpId();
         }
-        applicationMessageUtil.sendAppMessage(Arrays.asList(userIds.split(",")),corpId,msg,paramMsg);
+        applicationMessageUtil.sendTxtCardAppMessage(Arrays.asList(userIds.split(",")),corpId,title,url,btntxt,msg,paramMsg);
     }
+
+    @GetMapping("/user/getuserinfo")
+    public WeUserInfoDTO getuserinfo3rd(@Query("code") String code){
+        WeCorpAccount validWeCorpAccount = ixCorpAccountService.findValidWeCorpAccount();
+        WeUserInfoDTO qrCodeLoginUserInfo = weUserClient.getQrCodeLoginUserInfo(code, validWeCorpAccount.getCorpId());
+        return  qrCodeLoginUserInfo;
+    }
+
+
 }
